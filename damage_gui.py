@@ -10,7 +10,7 @@ import threading
 # ================= CONFIG ================= #
 MODEL_PATH = r"best.pt"
 CLASS_NAMES = ["damaged_pill"]
-CONF_THRESHOLD = 0.25
+CONF_THRESHOLD = 0.5
 IMG_SIZE = 640
 
 
@@ -122,17 +122,6 @@ class PillDetectorApp:
                                     command=self.upload_image)
         self.upload_btn.pack(fill="x", pady=6)
         self.hover(self.upload_btn, "#74c7ec", "#89b4fa")
-
-        # Slider
-        self.conf_var = tk.DoubleVar(value=CONF_THRESHOLD)
-        tk.Label(parent, text="Confidence",
-                 fg="#cdd6f4", bg="#1e1e2e").pack(anchor="w")
-
-        tk.Scale(parent, from_=0.05, to=0.95, resolution=0.05,
-                 orient="horizontal",
-                 variable=self.conf_var,
-                 bg="#1e1e2e", fg="#cdd6f4",
-                 troughcolor="#313244").pack(fill="x")
 
         # Detect
         self.detect_btn = tk.Button(parent, text="🔍 Detect",
@@ -253,7 +242,7 @@ class PillDetectorApp:
             try:
                 orig, annotated, count, details = detect_pills(
                     self.image_path, self.model,
-                    self.conf_var.get()
+                    CONF_THRESHOLD
                 )
 
                 self.annotated_img = annotated
